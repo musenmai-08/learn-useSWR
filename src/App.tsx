@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useIsModalOpen } from "./hooks/useIsModalOpen";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App = () => {
+	const { data, isLoading, isError, mutate } = useIsModalOpen(true);
 
-export default App;
+	const onClick = async () => {
+		const newValue = {
+			isModalOpen: data?.isModalOpen ? false : true,
+		};
+		mutate(newValue, false);
+	};
+
+	if (isError) return <div>エラーです</div>;
+	if (isLoading) return <div>読み込み中...</div>;
+
+	return (
+		<div>
+			<h1>状態：{data?.isModalOpen ? "モーダル開いてます" : "閉じてます"}</h1>
+			<button onClick={onClick}>stateの変更</button>
+		</div>
+	);
+};
